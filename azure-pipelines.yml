@@ -1,0 +1,82 @@
+trigger:
+  - master  # Automatically triggers the pipeline when changes are pushed to the 'master' branch
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use the Ubuntu VM image for the build agent
+
+variables:
+  TERRAFORM_VERSION: '1.5.0'
+  ANSIBLE_VERSION: '2.9.0'
+  AZURE_SUBSCRIPTION: '<Azure subscription ID>'  # Add your Azure subscription ID
+  AWS_REGION: 'us-east-1'
+  ARM_CLIENT_ID: '<Azure service principal appId>'
+  ARM_CLIENT_SECRET: '<Azure service principal password>'
+  ARM_TENANT_ID: '<Azure tenant ID>'
+  ARM_SUBSCRIPTION_ID: '<Azure subscription ID>'
+
+steps:
+
+# Install Terraform and Ansible
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Install Terraform
+      if ! [ -x "$(command -v terraform)" ]; then
+        curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        sudo unzip /tmp/terraform.zip -d /usr/local/bin/
+      fi
+
+      # Install Ansible
+      if ! [ -x "$(command -v ansible)" ]; then
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo apt-add-repository --yes --update ppa:ansible/ansible
+        sudo apt-get install -y ansible=${ANSIBLE_VERSION}
+      fi
+
+# Authenticate to Azure using the service principal
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(AZURE_SUBSCRIPTION)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
+      az account set --subscription $(ARM_SUBSCRIPTION_ID)
+
+# Terraform Init
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      terraform init
+
+# Terraform Plan
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      terraform plan
+
+# Terraform Apply
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      terraform apply -auto-approve
+
+# Generate Ansible Hosts File
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Verify if the hosts file was generated successfully
+      cat hosts
+
+# Run Ansible Playbook
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      ansible-playbook -i hosts ansible-playbook.yml

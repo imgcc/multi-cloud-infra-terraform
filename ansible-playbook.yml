@@ -1,0 +1,36 @@
+---
+- name: Install Nginx and configure a Hello World page
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache on Debian/Ubuntu
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Nginx on Debian/Ubuntu
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Start and enable Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Create an index.html file with Hello World
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <html>
+          <head><title>Welcome to Sam's Nginx Server</title></head>
+          <body><h1>Hello, World from {{ inventory_hostname }}!</h1></body>
+          </html>
+
+    - name: Ensure Nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
