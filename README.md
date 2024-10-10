@@ -1,16 +1,48 @@
 # multi-cloud-infra-terraform
 
-multi-cloud-infra-terraform/
-│
-├── main.tf                  # Main Terraform configuration file
-├── variables.tf             # Variables for cloud infrastructure
-├── outputs.tf               # Outputs from the Terraform run
-├── azure.tf                 # Azure-specific infrastructure setup
-├── aws.tf                   # AWS-specific infrastructure setup
-├── ansible-playbook.yml      # Ansible playbook for post-provisioning
-├── Jenkinsfile              # CI/CD pipeline for Jenkins
-├── README.md                # Documentation
-└── LICENSE
+<table>
+  <tr>
+    <th>File Name</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>main.tf</code></td>
+    <td>Main Terraform configuration file</td>
+  </tr>
+  <tr>
+    <td><code>variables.tf</code></td>
+    <td>Variables for cloud infrastructure</td>
+  </tr>
+  <tr>
+    <td><code>outputs.tf</code></td>
+    <td>Outputs from the Terraform run</td>
+  </tr>
+  <tr>
+    <td><code>azure.tf</code></td>
+    <td>Azure-specific infrastructure setup</td>
+  </tr>
+  <tr>
+    <td><code>aws.tf</code></td>
+    <td>AWS-specific infrastructure setup</td>
+  </tr>
+  <tr>
+    <td><code>ansible-playbook.yml</code></td>
+    <td>Ansible playbook for post-provisioning</td>
+  </tr>
+  <tr>
+    <td><code>Jenkinsfile</code></td>
+    <td>CI/CD pipeline for Jenkins</td>
+  </tr>
+  <tr>
+    <td><code>README.md</code></td>
+    <td>Documentation</td>
+  </tr>
+  <tr>
+    <td><code>LICENSE</code></td>
+    <td>License information</td>
+  </tr>
+</table>
+
 
 # Automated Multi-Cloud Infrastructure with Terraform
 
