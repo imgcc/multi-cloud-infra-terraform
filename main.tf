@@ -1,12 +1,12 @@
 # Terraform Cloud Backend Configuration
 terraform {
-  backend "remote" {
-    organization = "imgc" # Update with your Terraform Cloud organization
+  # backend "remote" {
+  #   organization = "imgc" # Update with your Terraform Cloud organization
 
-    workspaces {
-      name = "multi-cloud-infra-terraform" # Update with your Terraform Cloud workspace name
-    }
-  }
+  #   workspaces {
+  #     name = "multi-cloud-infra-terraform" # Update with your Terraform Cloud workspace name
+  #   }
+  # }
 
   required_providers {
     azurerm = {
